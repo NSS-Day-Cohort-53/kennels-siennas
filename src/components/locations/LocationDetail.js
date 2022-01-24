@@ -23,6 +23,7 @@ export default () => {
             <div className="jumbotron detailCard">
                 <h1 className="display-4">{location.name}</h1>
                 <p className="lead detailCard__lead">
+                We currently have {location.animals.length} animals in our care.
                     Currently caring for
                     {
                         location.animals.map((a, idx, arr) =>
@@ -31,7 +32,8 @@ export default () => {
                                 <Link to={`/animals/${a.id}`}> {a.name}</Link>
                             </span>
                         )
-                    }
+                    }       
+       
                 </p>
 
                 <hr className="my-4" />
@@ -40,6 +42,7 @@ export default () => {
                         `We currently have ${location.employeeLocations.length}
                         well-trained animal lovers and trainers:`
                     }
+
                 </p>
                 <p className="lead detailCard__info">
                     {OxfordList(location.employeeLocations, "employee.name")}
