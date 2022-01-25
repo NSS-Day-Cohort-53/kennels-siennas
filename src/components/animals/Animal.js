@@ -6,6 +6,7 @@ import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
+import EmployeeRepository from "../../repositories/EmployeeRepository";
 
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
@@ -52,6 +53,10 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [animalId])
 
+
+
+
+
     return (
         <>
             <li className={classes}>
@@ -84,13 +89,17 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                                {animal.animalCaretakers.map((x) => {
+                                    return <p>{x.user.name}</p>
+                                })}
                             </span>
 
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                                {animal.animalOwners.map((x) => {
+                                    return <p>{x.user.name}</p>
+                                })}
                             </span>
 
                             {
