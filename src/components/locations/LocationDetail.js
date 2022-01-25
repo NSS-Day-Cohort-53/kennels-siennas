@@ -51,11 +51,15 @@ export default () => {
                 <p className="lead detailCard__info">
                 {
                 getCurrentUser().employee
-                    ? <select>
-                        {nonLocationEmployees.map((emp) => <option>{emp.name}</option>)}
-                    </select>
+                    ? <div>
+                        Add An Employee?{" "}
+                        <select>
+                            <option>Select An Employee</option>
+                            {nonLocationEmployees.map((emp) => <option>{emp.name}</option>)}
+                        </select>
+                    </div>
                     : ""
-            }
+                }
                     {
                         `We currently have ${location.employeeLocations.length}
                         well-trained animal lovers and trainers:`
