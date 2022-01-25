@@ -2,9 +2,10 @@ import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
 import LocationRepository from "../../repositories/LocationRepository";
+import EmployeeRepository from "../../repositories/EmployeeRepository";
+import { useHistory } from "react-router";
 
-
-export default (props) => {
+export default (props ) => {
     const [animalName, setName] = useState("")
     const [breed, setBreed] = useState("")
     const [animals, setAnimals] = useState([])
@@ -13,11 +14,19 @@ export default (props) => {
     const [saveEnabled, setEnabled] = useState(false)
     const [locations, setLocations] = useState([])
     const [locationId, setLocationId] = useState([])
+    const history = useHistory()
 
     useEffect(() => {
         LocationRepository.getAll()
             .then((x) => {
             setLocations(x)})
+    }, [])
+
+    useEffect(() => {
+        EmployeeRepository.getAll()
+            .then((x) => {
+                setEmployees(x)
+            })
     }, [])
 
     const constructNewAnimal = evt => {
@@ -37,7 +46,7 @@ export default (props) => {
 
             AnimalRepository.addAnimal(animal)
                 .then(() => setEnabled(true))
-                .then(() => props.history.push("/animals"))
+                .then(() => history.push("/animals"))
         }
     }
 
