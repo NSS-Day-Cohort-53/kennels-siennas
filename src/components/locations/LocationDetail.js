@@ -2,16 +2,27 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom"
 import { OxfordList } from "../../hooks/string/OxfordList.tsx"
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth.js";
+import EmployeeRepository from "../../repositories/EmployeeRepository.js";
 import LocationRepository from "../../repositories/LocationRepository"
 import "./Location.css"
 
 
 export default () => {
     const [animals, setAnimals] = useState([])
-    const [employees, updateEmployees] = useState([])
+    const [nonLocationEmployees, updateEmployees] = useState([])
     const [location, set] = useState({animals:[], employeeLocations: []})
+    const {getCurrentUser} = useSimpleAuth();
 
     const { locationId } = useParams()
+
+    useEffect(() => {
+        EmployeeRepository.getAll().then((allEmployees) => {
+            const filtered = allEmployees.filter((e) => 
+                e.employeeLocations[0]?.locationId !== parseInt(locationId))
+            return updateEmployees(filtered)
+        })
+    }, [])
 
 
     useEffect(() => {
@@ -38,6 +49,13 @@ export default () => {
 
                 <hr className="my-4" />
                 <p className="lead detailCard__info">
+                {
+                getCurrentUser().employee
+                    ? <select>
+                        {nonLocationEmployees.map((emp) => <option>{emp.name}</option>)}
+                    </select>
+                    : ""
+            }
                     {
                         `We currently have ${location.employeeLocations.length}
                         well-trained animal lovers and trainers:`
