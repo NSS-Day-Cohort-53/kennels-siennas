@@ -19,24 +19,6 @@ export const Animal = ({ animal, syncAnimals,
     const history = useHistory()
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
-    const [ allEmployees, setEmployees ] = useState([])
-    const [ currentCaretaker, setCaretaker ] = useState({})
-
-    useEffect(() => {
-        EmployeeRepository.getAll()
-            .then((data) => {
-                setEmployees(data)
-            })
-    }, [])
-
-    useEffect(() => {
-        const chosenCaretaker = {}
-        allEmployees.filter((emp) => {
-            if(emp.id === currentAnimal.animalCaretakers.userId) {
-                chosenCaretaker.push(emp)
-            }})
-        setCaretaker(chosenCaretaker)
-        }, [])
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -107,7 +89,9 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                {currentCaretaker}
+                                {animal.animalCaretakers.map((x) => {
+                                    return <p>{x.user.name}</p>
+                                })}
                             </span>
 
 
