@@ -16,6 +16,10 @@ export default ({ employee }) => {
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
 
+   
+
+
+
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
@@ -28,8 +32,9 @@ export default ({ employee }) => {
         if (resource?.locations?.length > 0) {
             markLocation(resource.locations[0].location)
         }
-          
-        
+         if (resource?.animals?.length > 0) {
+             setCount(resource.animals.length)
+         }
     }, [resource])
 
     return (
