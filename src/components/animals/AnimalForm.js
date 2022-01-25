@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
+import LocationRepository from "../../repositories/LocationRepository";
 
 
 export default (props) => {
@@ -10,6 +11,14 @@ export default (props) => {
     const [employees, setEmployees] = useState([])
     const [employeeId, setEmployeeId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
+    const [locations, setLocations] = useState([])
+    const [locationId, setLocationId] = useState([])
+
+    useEffect(() => {
+        LocationRepository.getAll()
+            .then((x) => {
+            setLocations(x)})
+    }, [])
 
     const constructNewAnimal = evt => {
         evt.preventDefault()
@@ -23,7 +32,7 @@ export default (props) => {
                 name: animalName,
                 breed: breed,
                 employeeId: eId,
-                locationId: parseInt(emp.locationId)
+                locationId: locationId
             }
 
             AnimalRepository.addAnimal(animal)
@@ -58,6 +67,24 @@ export default (props) => {
                     placeholder="Breed"
                 />
             </div>
+            <div>
+                <label htmlFor="location">Location</label>
+                    <select
+                        defaultValue=""
+                        name="location"
+                        id="locationId"
+                        className="form-control"
+                        onChange={x => setLocationId(x.target.value)}
+                    >
+                        <option value="">Select a Location</option>
+                        {locations.map((x) => (
+                            <option key={x.id} id={x.id} value={x.name}>
+                                {x.name}
+                            </option>
+                        ))}
+                    </select>
+            </div>
+
             <div className="form-group">
                 <label htmlFor="employee">Make appointment with caretaker</label>
                 <select
