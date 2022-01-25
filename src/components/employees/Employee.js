@@ -60,7 +60,9 @@ export default ({ employee }) => {
                 }
 
                 {
-                    <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    getCurrentUser().employee
+                    ? <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    : ""
                 }
 
             </section>
