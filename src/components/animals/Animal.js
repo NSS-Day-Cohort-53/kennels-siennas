@@ -97,7 +97,9 @@ export const Animal = ({ animal, syncAnimals,
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                                {animal.animalOwners.map((x) => {
+                                    return <p>{x.user.name}</p>
+                                })}
                             </span>
 
                             {
