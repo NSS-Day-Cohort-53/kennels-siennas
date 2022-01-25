@@ -16,13 +16,24 @@ export default () => {
 
     const { locationId } = useParams()
 
+    const constructNewEmployeeLocation = (e) => {
+        const obj = {
+            locationId: parseInt(locationId),
+            userId: parseInt(e.target.value)
+        }
+        EmployeeRepository.assignEmployee(obj)
+        .then(LocationRepository.get(locationId).then(set))
+    }
+
     useEffect(() => {
         EmployeeRepository.getAll().then((allEmployees) => {
-            const filtered = allEmployees.filter((e) => 
-                e.employeeLocations[0]?.locationId !== parseInt(locationId))
+            const filtered = allEmployees.filter((e) => {
+                const arr = e.employeeLocations.map((emploc) => emploc.locationId)
+                return !arr.includes(parseInt(locationId))
+            })
             return updateEmployees(filtered)
         })
-    }, [])
+    }, [location])
 
 
     useEffect(() => {
@@ -48,18 +59,20 @@ export default () => {
                 </p>
 
                 <hr className="my-4" />
-                <p className="lead detailCard__info">
                 {
-                getCurrentUser().employee
+                    getCurrentUser().employee
                     ? <div>
                         Add An Employee?{" "}
-                        <select>
+                        <select
+                        onChange={constructNewEmployeeLocation}>
                             <option>Select An Employee</option>
-                            {nonLocationEmployees.map((emp) => <option>{emp.name}</option>)}
+                            {nonLocationEmployees.map((emp) => <option value={emp.id} key={emp.id}>
+                                {emp.name}</option>)}
                         </select>
                     </div>
                     : ""
                 }
+                        <p className="lead detailCard__info">
                     {
                         `We currently have ${location.employeeLocations.length}
                         well-trained animal lovers and trainers:`
