@@ -6,6 +6,7 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
+import LocationDetail from "../locations/LocationDetail";
 
 
 export default ({ employee }) => {
@@ -37,6 +38,8 @@ export default ({ employee }) => {
          }
     }, [resource])
 
+
+
     return (
         <article className={classes}>
             <section className="card-body">
@@ -62,7 +65,7 @@ export default ({ employee }) => {
                                 Caring for { animalCount } animals
                             </section>
                             <section>
-                                Working at the {location.name} location
+                                Working at the {resource.locations?.map((loc) =>loc.location.name)} location(s)
                             </section>
                         </>
                         : ""
