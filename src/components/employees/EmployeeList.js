@@ -14,7 +14,7 @@ export default () => {
         <>
             <div className="employees">
                 {emps.map((a) => (
-                    <Employee key={a.id} employee={a} />
+                    <Employee setEmps={setEmployees} key={a.id} employee={a} />
                 ))}
             </div>
         </>
