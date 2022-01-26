@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
+import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository"
 import LocationRepository from "../../repositories/LocationRepository";
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 import { useHistory } from "react-router";
 
-export default (props ) => {
+export default (props) => {
     const [animalName, setName] = useState("")
     const [breed, setBreed] = useState("")
     const [animals, setAnimals] = useState([])
@@ -28,7 +29,6 @@ export default (props ) => {
                 setEmployees(x)
             })
     }, [])
-
     const constructNewAnimal = evt => {
         evt.preventDefault()
         const eId = parseInt(employeeId)
@@ -40,13 +40,24 @@ export default (props ) => {
             const animal = {
                 name: animalName,
                 breed: breed,
-                employeeId: eId,
-                locationId: locationId
+                // employeeId: eId,
+                locationId: parseInt(emp.locationId)
             }
 
             AnimalRepository.addAnimal(animal)
+                .then((data) => {
+                    const anmEmp = eId
+                    const anmId = data.id
+                    const newAnmCare = {
+                        animalId: anmId,
+                        userId: anmEmp
+                    }
+                    AnimalOwnerRepository.assignCaretaker(newAnmCare)
+                }
+                )
                 .then(() => setEnabled(true))
-                .then(() => history.push("/animals"))
+                .then(() => history.push("/animals"));
+            
         }
     }
 
@@ -93,7 +104,6 @@ export default (props ) => {
                         ))}
                     </select>
             </div>
-
             <div className="form-group">
                 <label htmlFor="employee">Make appointment with caretaker</label>
                 <select
