@@ -40,7 +40,7 @@ export default (props) => {
             const animal = {
                 name: animalName,
                 breed: breed,
-                locationId: parseInt(emp.locationId)
+                locationId
             }
 
             AnimalRepository.addAnimal(animal)
@@ -97,7 +97,7 @@ export default (props) => {
                     >
                         <option value="">Select a Location</option>
                         {locations.map((x) => (
-                            <option key={x.id} id={x.id} value={x.name}>
+                            <option key={x.id} id={x.id} value={x.id}>
                                 {x.name}
                             </option>
                         ))}
