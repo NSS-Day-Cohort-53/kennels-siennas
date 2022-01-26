@@ -51,5 +51,9 @@ export default {
     async getAll() {
         const e = await fetch(`${Settings.remoteURL}/animalOwners?_expand=user&user.employee=false&_expand=animal`)
         return await e.json()
-    }
+    },
+
+    async assignCaretaker(x) {
+        return await fetchIt(`${Settings.remoteURL}/animalCaretakers`, "POST", JSON.stringify(x))
+    },
 }

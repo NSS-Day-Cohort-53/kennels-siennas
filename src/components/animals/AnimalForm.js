@@ -1,7 +1,10 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
-
+import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository"
+import LocationRepository from "../../repositories/LocationRepository";
+import EmployeeRepository from "../../repositories/EmployeeRepository";
+import { useHistory } from "react-router";
 
 export default (props) => {
     const [animalName, setName] = useState("")
@@ -10,7 +13,22 @@ export default (props) => {
     const [employees, setEmployees] = useState([])
     const [employeeId, setEmployeeId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
+    const [locations, setLocations] = useState([])
+    const [locationId, setLocationId] = useState([])
+    const history = useHistory()
 
+    useEffect(() => {
+        LocationRepository.getAll()
+            .then((x) => {
+            setLocations(x)})
+    }, [])
+
+    useEffect(() => {
+        EmployeeRepository.getAll()
+            .then((x) => {
+                setEmployees(x)
+            })
+    }, [])
     const constructNewAnimal = evt => {
         evt.preventDefault()
         const eId = parseInt(employeeId)
@@ -22,13 +40,23 @@ export default (props) => {
             const animal = {
                 name: animalName,
                 breed: breed,
-                employeeId: eId,
-                locationId: parseInt(emp.locationId)
+                locationId: parseInt(locationId)
             }
 
             AnimalRepository.addAnimal(animal)
+                .then((data) => {
+                    const anmEmp = eId
+                    const anmId = data.id
+                    const newAnmCare = {
+                        animalId: anmId,
+                        userId: anmEmp
+                    }
+                    AnimalOwnerRepository.assignCaretaker(newAnmCare)
+                }
+                )
                 .then(() => setEnabled(true))
-                .then(() => props.history.push("/animals"))
+                .then(() => history.push("/animals"));
+            
         }
     }
 
@@ -57,6 +85,23 @@ export default (props) => {
                     id="breed"
                     placeholder="Breed"
                 />
+            </div>
+            <div>
+                <label htmlFor="location">Location</label>
+                    <select
+                        defaultValue=""
+                        name="location"
+                        id="locationId"
+                        className="form-control"
+                        onChange={x => setLocationId(x.target.value)}
+                    >
+                        <option value="">Select a Location</option>
+                        {locations.map((x) => (
+                            <option key={x.id} id={x.id} value={x.id}>
+                                {x.name}
+                            </option>
+                        ))}
+                    </select>
             </div>
             <div className="form-group">
                 <label htmlFor="employee">Make appointment with caretaker</label>
