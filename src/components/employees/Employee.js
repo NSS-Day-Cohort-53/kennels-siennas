@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useHistory } from "react-router-dom"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
@@ -7,13 +7,14 @@ import person from "./person.png"
 import "./Employee.css"
 
 
-export default ({ employee }) => {
+export default ({ setEmps, employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
+    const history = useHistory()
 
     useEffect(() => {
         if (employeeId) {
@@ -27,6 +28,16 @@ export default ({ employee }) => {
             markLocation(resource.employeeLocations[0])
         }
     }, [resource])
+
+    const removeEmployeeWithReload = (empId) => {
+        EmployeeRepository.delete(empId).then(
+            () => EmployeeRepository.getAll()).then((arr) => setEmps(arr));
+    }
+
+    const removeEmployeeWithRedirect = (empId) => {
+        EmployeeRepository.delete(empId).then(
+            () => history.push("/employees"));
+    }
 
     return (
         <article className={classes}>
@@ -61,7 +72,12 @@ export default ({ employee }) => {
 
                 {
                     getCurrentUser().employee
-                    ? <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    ? <button className="btn--fireEmployee"
+                        onClick={() => {
+                            employeeId
+                            ? removeEmployeeWithRedirect(parseInt(employeeId))
+                            : removeEmployeeWithReload(employee.id)}}>
+                        Fire</button>
                     : ""
                 }
 
