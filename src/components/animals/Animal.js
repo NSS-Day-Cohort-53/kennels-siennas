@@ -103,7 +103,7 @@ export const Animal = ({ animal, syncAnimals,
                             </span>
 
                             {
-                                myOwners.length < 2
+                                myOwners.length < 2 && isEmployee
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
