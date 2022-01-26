@@ -5,6 +5,7 @@ import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
+import AnimalRepository from "../../repositories/AnimalRepository";
 
 
 export default ({ setEmps, employee }) => {
@@ -16,17 +17,25 @@ export default ({ setEmps, employee }) => {
     const { resolveResource, resource } = useResourceResolver()
     const history = useHistory()
 
+   
+
+
+
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
         }
         resolveResource(employee, employeeId, EmployeeRepository.get)
+    
     }, [])
 
     useEffect(() => {
-        if (resource?.employeeLocations?.length > 0) {
-            markLocation(resource.employeeLocations[0])
+        if (resource?.locations?.length > 0) {
+            markLocation(resource.locations[0].location)
         }
+         if (resource?.animals?.length > 0) {
+             setCount(resource.animals.length)
+         }
     }, [resource])
 
     const removeEmployeeWithReload = (empId) => {
@@ -61,10 +70,10 @@ export default ({ setEmps, employee }) => {
                     employeeId
                         ? <>
                             <section>
-                                Caring for 0 animals
+                                Caring for { animalCount } animals
                             </section>
                             <section>
-                                Working at unknown location
+                                Working at the {location.name} location
                             </section>
                         </>
                         : ""
