@@ -40,7 +40,7 @@ export default (props) => {
             const animal = {
                 name: animalName,
                 breed: breed,
-                locationId
+                locationId: parseInt(locationId)
             }
 
             AnimalRepository.addAnimal(animal)
